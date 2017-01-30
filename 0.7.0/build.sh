@@ -10,5 +10,5 @@ git clone -q --branch=master https://github.com/kwaazaar/resonance.web.git ./app
 docker run -it --rm -v $(pwd)/app:/app --workdir /app microsoft/aspnetcore-build bash -c "dotnet restore && dotnet publish Resonance.Web/project.json -c Release -o /app/publish"
 
 # Create a docker image based on the compile results (remove existing first). Check Dockerfile for its instructions.
-docker rmi kwaazaar/resonance.web
-docker build -t kwaazaar/resonance.web .
+docker rmi resonance
+docker build . -t resonance:latest
