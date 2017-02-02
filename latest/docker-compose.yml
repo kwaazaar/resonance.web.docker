@@ -2,7 +2,7 @@ version: '3'
 
 services:
   resonance:
-    image: "resonance:latest"
+    image: "kwaazaar/resonance:latest"
     container_name: "resonance-web"
     depends_on:
       - db
