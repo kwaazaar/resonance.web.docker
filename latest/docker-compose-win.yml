@@ -2,16 +2,14 @@ version: '3'
 
 services:
   resonance:
-    image: "kwaazaar/resonance:latest"
+    image: "kwaazaar/resonance-nanoserver:latest"
     container_name: "resonance-web"
     depends_on:
       - db
-    networks:
-      - bridgenet
     ports:
       - "8000:80"
     environment:
-      "ConnectionStrings:Resonance.MsSql": "Server=(local);Database=ResonanceDB;User ID=sa;Password=Password12!;MultipleActiveResultSets=true;"
+      "ConnectionStrings:Resonance.MsSql": "Server=db;Database=ResonanceDB;User ID=sa;Password=Password12!;MultipleActiveResultSets=true;"
       "Resonance:Repo:Database:Type": "MsSql"
   db:
     image: "microsoft/mssql-server-windows-express"
@@ -19,12 +17,13 @@ services:
     environment:
       "ACCEPT_EULA": "Y"
       "sa_password": "Password12!"
-      "attach_dbs": "[{'dbName':'ResonanceDB','dbFiles':['C:\\Db\\ResonanceDB.mdf','C:\\Db\\ResonanceDB_log.ldf']}]"
+      "attach_dbs": "[{'dbName':'ResonanceDB','dbFiles':['C:\\\\Db\\\\ResonanceDB.mdf','C:\\\\Db\\\\ResonanceDB_log.ldf']}]"
     volumes:
       - ./resonancedb:C:\Db
-    networks:
-      - bridgenet
+    ports:
+      - "1433:1433"
 
 networks:
-  bridgenet:
-    driver: bridge
+  default:
+    external:
+      name: nat

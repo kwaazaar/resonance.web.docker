@@ -1,9 +1,12 @@
-FROM microsoft/dotnet:nanoserver-runtime
+FROM microsoft/dotnet:runtime-nanoserver
 
 LABEL maintainer robert.te.kaat@gmail.com
 
 WORKDIR /app
 COPY ./app/publish .
+
+#ASP.NET Core networking
+ENV ASPNETCORE_URLS http://+:80
 
 # Standard setup uses MySql
 ENV ConnectionStrings:Resonance.MsSql="Server=(local);Database=ResonanceDB;User ID=sa;Password=Password12!;MultipleActiveResultSets=true;"
