@@ -1,5 +1,7 @@
 version: '3'
 
+# Get docker-compose for Windows here: https://github.com/docker/compose/releases
+
 services:
   resonance:
     image: "kwaazaar/resonance-nanoserver:latest"
@@ -8,22 +10,31 @@ services:
       - db
     ports:
       - "8000:80"
+    networks:
+      resonancenet:
+        ipv4_address: 10.0.0.1
     environment:
       "ConnectionStrings:Resonance.MsSql": "Server=db;Database=ResonanceDB;User ID=sa;Password=Password12!;MultipleActiveResultSets=true;"
       "Resonance:Repo:Database:Type": "MsSql"
   db:
     image: "microsoft/mssql-server-windows-express"
     container_name: "resonance-db"
+    ports:
+      - "1433:1433"
+    networks:
+      resonancenet:
+        ipv4_address: 10.0.0.2
     environment:
       "ACCEPT_EULA": "Y"
       "sa_password": "Password12!"
       "attach_dbs": "[{'dbName':'ResonanceDB','dbFiles':['C:\\\\Db\\\\ResonanceDB.mdf','C:\\\\Db\\\\ResonanceDB_log.ldf']}]"
     volumes:
       - ./resonancedb:C:\Db
-    ports:
-      - "1433:1433"
 
 networks:
-  default:
-    external:
-      name: nat
+  resonancenet:
+    driver: nat #bridge?
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/16
